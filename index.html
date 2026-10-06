@@ -47,7 +47,7 @@
 
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -60,27 +60,37 @@
     <!-- Invitation opening screen -->
     <section id="openingScreen" class="fixed inset-0 z-[70] flex items-center justify-center px-6 bg-slate-950/95"
         role="dialog" aria-modal="true" aria-label="Open the wedding invitation">
-        
-        <div id="envelopeContainer" class="envelope-container cursor-pointer" tabindex="0" role="button" aria-label="Open Ahmed and Sherouk's wedding invitation">
-            <div class="envelope">
-                <div class="envelope-front"></div>
-                <div class="envelope-front-left"></div>
-                <div class="envelope-front-right"></div>
-                <div class="envelope-front-bottom"></div>
-                
-                <!-- Inner Card inside Envelope -->
-                <div class="envelope-card">
-                    <div class="text-[10px] tracking-[0.35em] uppercase text-gold-400 mb-2">You are invited</div>
-                    <div class="font-cursive text-3xl md:text-4xl text-gold-300 mb-2 whitespace-nowrap">Ahmed & Sherouk</div>
-                    <div class="text-[10px] tracking-widest text-slate-300 uppercase">Friday, 6 November 2026</div>
+
+        <div id="envelopeContainer" class="envelope-container cursor-pointer" tabindex="0" role="button"
+            aria-label="Open Ahmed and Sherouk's wedding invitation">
+
+            <!-- Wrapper for idle breathe animation -->
+            <div class="env-wrapper">
+
+                <!-- LAYER 1: Envelope back (base) -->
+                <div class="env-back"></div>
+
+                <!-- LAYER 2: Card clip → hides card inside envelope until flap opens -->
+                <div class="env-card-clip">
+                    <div class="env-card">
+                        <div class="text-[10px] tracking-[0.35em] uppercase text-gold-400 mb-2">You are invited</div>
+                        <div class="font-cursive text-3xl md:text-4xl text-gold-300 mb-2 whitespace-nowrap">Ahmed & Sherouk</div>
+                        <div class="text-[10px] tracking-widest text-slate-300 uppercase">Friday, 6 November 2026</div>
+                    </div>
                 </div>
 
-                <!-- Envelope Flap -->
-                <div class="envelope-flap">
-                    <div class="wax-seal"></div>
+                <!-- LAYER 3: Pocket panels (LOWER triangles only – leaves top opening clear for card) -->
+                <div class="env-pocket-left"></div>
+                <div class="env-pocket-right"></div>
+                <div class="env-pocket-bottom"></div>
+
+                <!-- LAYER 4: Top flap + wax seal -->
+                <div class="env-flap">
+                    <div class="env-seal"></div>
                 </div>
-            </div>
-            
+
+            </div><!-- /.env-wrapper -->
+
             <div class="absolute -bottom-10 left-0 right-0 text-center pointer-events-none">
                 <div class="text-xs text-slate-400 animate-pulse-subtle">Tap to open</div>
             </div>
@@ -95,7 +105,7 @@
         <header class="text-center pt-8 pb-4 relative">
             <div
                 class="inline-block px-4 py-1 rounded-full border border-gold-500/30 bg-gold-500/10 backdrop-blur-sm text-gold-300 text-xs font-semibold tracking-widest uppercase mb-4 animate-pulse-subtle">
-                ✨ Save The Date ✨
+                Save The Date
             </div>
 
             <h1 class="font-serif text-3xl font-bold tracking-wider text-gold-gradient uppercase mb-1">
@@ -120,7 +130,7 @@
         <section class="glass-card rounded-3xl p-6 text-center relative overflow-hidden">
             <div class="absolute -right-10 -top-10 w-32 h-32 bg-gold-500/10 rounded-full blur-2xl"></div>
 
-            <h2 class="font-arabic text-3xl text-gold-300 font-bold mb-3">دعـــوة خــاصــة</h2>
+            <h2 class="font-arabic text-3xl text-gold-300 font-bold mb-3">Special Invitation</h2>
             <p class="text-xs text-slate-300 leading-relaxed font-light mb-4">
                 WE ARE DELIGHTED TO INVITE YOU TO CELEBRATE OUR WEDDING. YOUR PRESENCE WOULD TRULY HONOR US.
             </p>
@@ -139,7 +149,7 @@
         <section class="glass-card rounded-3xl p-6 relative">
             <!-- Glass Header Ribbon / Tag -->
             <div class="flex justify-between items-center text-xs text-slate-400 border-b border-white/10 pb-3 mb-4">
-                <span class="font-mono tracking-widest uppercase text-gold-400">YEAR 2026</span>
+                <span class="font-mono tracking-widest uppercase text-gold-400">2026</span>
                 <span class="font-bold text-slate-200 tracking-widest uppercase">NOVEMBER</span>
                 <span class="font-mono tracking-widest uppercase text-gold-400">FRI</span>
             </div>
@@ -155,7 +165,8 @@
                     </span>
                 </div>
                 <div class="text-sm font-semibold tracking-wider text-slate-300 uppercase mt-1">FRIDAY, 6 NOVEMBER</div>
-                <div class="text-xs text-gold-400/90 font-mono mt-1"><i class="fa-regular fa-clock mr-1"></i> 3:00–6:00 PM
+                <div class="text-xs text-gold-400/90 font-mono mt-1"><i class="fa-regular fa-clock mr-1"></i> 3:00–6:00
+                    PM
                 </div>
                 <div class="text-xs text-slate-400 font-mono mt-1">Katb ElKetab • 3:30 PM</div>
             </div>
@@ -190,16 +201,17 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Public RSVP Messages -->
         <section class="glass-card rounded-3xl p-6 relative overflow-hidden">
-            <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-gold-500/5 rounded-full blur-2xl pointer-events-none"></div>
-            
+            <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-gold-500/5 rounded-full blur-2xl pointer-events-none">
+            </div>
+
             <div class="flex items-center gap-2 mb-4 justify-center">
                 <i class="fa-solid fa-envelope-open-text text-gold-400 text-sm"></i>
                 <h3 class="text-xs uppercase tracking-widest text-gold-400 font-semibold">Guest Wishes</h3>
             </div>
-            
+
             <div id="messagesContainer" class="space-y-3 relative z-10 min-h-[100px] flex flex-col justify-center">
                 <!-- Messages will be injected here dynamically -->
                 <div class="text-center text-slate-400 text-xs">
@@ -212,55 +224,75 @@
         <footer class="text-center py-6 text-xs text-slate-500 space-y-1">
             <p class="font-serif tracking-widest text-gold-400/80">AHMED & SHEROUK • 2026</p>
             <p>Made with ❤️️ for your special moment</p>
+            <br>
+            <br>
+            <br>
+            <p class="pt-2 border-t border-white/5 mt-2 text-slate-600">
+                Designed & Developed by
+                <a href="https://engomarabd-elaziz.github.io/My-Portofolio/" target="_blank" rel="noopener noreferrer"
+                    class="text-gold-600/70 hover:text-gold-400 transition-colors duration-300">
+                    Eng. Omar Abdelaziz
+                </a>
+            </p>
         </footer>
 
-    <!-- Navigation Bar -->
-    <nav class="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto glass-nav rounded-t-3xl px-4 py-3">
-        <div class="flex justify-around items-center text-center">
-            <!-- Contact -->
-            <button onclick="openModal('contactModal')"
-                class="flex flex-col items-center gap-1 text-slate-400 hover:text-gold-300 transition-colors group">
-                <div
-                    class="w-9 h-9 rounded-full bg-slate-800/80 group-hover:bg-gold-500/20 flex items-center justify-center border border-white/10 group-hover:border-gold-500/40">
-                    <i class="fa-solid fa-phone text-xs"></i>
-                </div>
-                <span class="text-[10px] tracking-wider uppercase font-medium">Contact</span>
-            </button>
+        <!-- Navigation Bar -->
+        <nav class="fixed bottom-0 left-0 right-0 z-40 max-w-md mx-auto glass-nav rounded-t-3xl px-4 py-3">
+            <div class="flex justify-around items-center text-center">
+                <!-- Contact -->
+                <button onclick="openModal('contactModal')"
+                    class="flex flex-col items-center gap-1 text-slate-400 hover:text-gold-300 transition-colors group">
+                    <div
+                        class="w-9 h-9 rounded-full bg-slate-800/80 group-hover:bg-gold-500/20 flex items-center justify-center border border-white/10 group-hover:border-gold-500/40">
+                        <i class="fa-solid fa-phone text-xs"></i>
+                    </div>
+                    <span class="text-[10px] tracking-wider uppercase font-medium">Contact</span>
+                </button>
 
-            <!-- Music -->
-            <button onclick="openModal('musicModal')"
-                class="flex flex-col items-center gap-1 text-slate-400 hover:text-gold-300 transition-colors group">
-                <div
-                    class="w-9 h-9 rounded-full bg-slate-800/80 group-hover:bg-gold-500/20 flex items-center justify-center border border-white/10 group-hover:border-gold-500/40 relative">
-                    <i id="musicIcon" class="fa-solid fa-music text-xs"></i>
-                    <span id="musicBadge"
-                        class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping hidden"></span>
-                </div>
-                <span class="text-[10px] tracking-wider uppercase font-medium">Music</span>
-            </button>
+                <!-- Music -->
+                <button onclick="openModal('musicModal')"
+                    class="flex flex-col items-center gap-1 text-slate-400 hover:text-gold-300 transition-colors group">
+                    <div
+                        class="w-9 h-9 rounded-full bg-slate-800/80 group-hover:bg-gold-500/20 flex items-center justify-center border border-white/10 group-hover:border-gold-500/40 relative">
+                        <i id="musicIcon" class="fa-solid fa-music text-xs"></i>
+                        <span id="musicBadge"
+                            class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping hidden"></span>
+                    </div>
+                    <span class="text-[10px] tracking-wider uppercase font-medium">Music</span>
+                </button>
 
-            <!-- Location (Highlighted Center Button) -->
-            <button onclick="openModal('locationModal')"
-                class="flex flex-col items-center gap-1 text-gold-300 group -mt-4">
-                <div
-                    class="w-12 h-12 rounded-full bg-gradient-to-tr from-gold-600 to-gold-300 text-slate-950 flex items-center justify-center shadow-lg shadow-gold-500/30 group-hover:scale-105 transition-transform border-2 border-slate-900">
-                    <i class="fa-solid fa-location-dot text-base"></i>
-                </div>
-                <span class="text-[10px] tracking-wider uppercase font-semibold text-gold-300">Location</span>
-            </button>
+                <!-- Location (Highlighted Center Button) -->
+                <button onclick="openModal('locationModal')"
+                    class="flex flex-col items-center gap-1 text-gold-300 group -mt-4">
+                    <div
+                        class="w-12 h-12 rounded-full bg-gradient-to-tr from-gold-600 to-gold-300 text-slate-950 flex items-center justify-center shadow-lg shadow-gold-500/30 group-hover:scale-105 transition-transform border-2 border-slate-900">
+                        <i class="fa-solid fa-location-dot text-base"></i>
+                    </div>
+                    <span class="text-[10px] tracking-wider uppercase font-semibold text-gold-300">Location</span>
+                </button>
 
-            <!-- RSVP -->
-            <button onclick="openModal('rsvpModal')"
-                class="flex flex-col items-center gap-1 text-slate-400 hover:text-gold-300 transition-colors group">
-                <div
-                    class="w-9 h-9 rounded-full bg-slate-800/80 group-hover:bg-gold-500/20 flex items-center justify-center border border-white/10 group-hover:border-gold-500/40">
-                    <i class="fa-solid fa-heart text-xs"></i>
-                </div>
-                <span class="text-[10px] tracking-wider uppercase font-medium">RSVP</span>
-            </button>
+                <!-- Date -->
+                <button onclick="openModal('dateModal')"
+                    class="flex flex-col items-center gap-1 text-slate-400 hover:text-gold-300 transition-colors group">
+                    <div
+                        class="w-9 h-9 rounded-full bg-slate-800/80 group-hover:bg-gold-500/20 flex items-center justify-center border border-white/10 group-hover:border-gold-500/40">
+                        <i class="fa-solid fa-calendar-days text-xs"></i>
+                    </div>
+                    <span class="text-[10px] tracking-wider uppercase font-medium">Date</span>
+                </button>
 
-        </div>
-    </nav>
+                <!-- RSVP -->
+                <button onclick="openModal('rsvpModal')"
+                    class="flex flex-col items-center gap-1 text-slate-400 hover:text-gold-300 transition-colors group">
+                    <div
+                        class="w-9 h-9 rounded-full bg-slate-800/80 group-hover:bg-gold-500/20 flex items-center justify-center border border-white/10 group-hover:border-gold-500/40">
+                        <i class="fa-solid fa-heart text-xs"></i>
+                    </div>
+                    <span class="text-[10px] tracking-wider uppercase font-medium">RSVP</span>
+                </button>
+
+            </div>
+        </nav>
     </main>
 
     <!-- MODAL CONTAINER BACKDROP -->
@@ -276,12 +308,14 @@
             </button>
             <h3 class="font-serif text-xl font-bold text-gold-gradient mb-1">RSVP - Attendance</h3>
             <p class="text-xs text-slate-400 mb-3">Please let us know whether you can join us.</p>
-            <p class="text-xs text-gold-300 mb-5">Capacity is limited to 200 guests. Submitting an RSVP does not guarantee or reserve a seat.</p>
+            <p class="text-xs text-gold-300 mb-5">Capacity is limited to 200 guests. Submitting an RSVP does not
+                guarantee or reserve a seat.</p>
 
             <form id="rsvpForm" onsubmit="handleRSVPSubmit(event)" class="space-y-4">
                 <div>
                     <label for="guestName" class="block text-xs text-slate-300 mb-1">Your name</label>
-                    <input type="text" id="guestName" name="name" required autocomplete="name" placeholder="Your full name"
+                    <input type="text" id="guestName" name="name" required autocomplete="name"
+                        placeholder="Your full name"
                         class="w-full bg-slate-900/80 border border-gold-500/30 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-gold-400">
                 </div>
 
@@ -303,14 +337,16 @@
                 </div>
 
                 <div>
-                    <label for="guestCount" class="block text-xs text-slate-300 mb-1">Number of companions joining you</label>
+                    <label for="guestCount" class="block text-xs text-slate-300 mb-1">Number of companions joining
+                        you</label>
                     <input type="number" id="guestCount" name="companions" min="0" step="1" value="0" required
                         class="w-full bg-slate-900/80 border border-gold-500/30 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-gold-400">
                 </div>
 
                 <div>
                     <label for="guestWish" class="block text-xs text-slate-300 mb-1">Congratulations message</label>
-                    <textarea id="guestWish" name="message" rows="2" required placeholder="Write a message for the couple..."
+                    <textarea id="guestWish" name="message" rows="2" required
+                        placeholder="Write a message for the couple..."
                         class="w-full bg-slate-900/80 border border-gold-500/30 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-gold-400"></textarea>
                 </div>
 
@@ -349,7 +385,8 @@
                 </div>
             </div>
 
-            <a href="https://share.google/FNLdm4Xul2ibjzvrU" target="_blank" rel="noopener noreferrer"
+            <a href="https://www.google.com/maps/search/?api=1&query=30.0444,31.2357" target="_blank"
+                rel="noopener noreferrer"
                 class="w-full py-3 rounded-xl bg-gold-500/20 hover:bg-gold-500/30 border border-gold-500/50 text-gold-300 font-bold text-sm tracking-wider uppercase transition-colors flex items-center justify-center gap-2">
                 <i class="fa-solid fa-map-location-dot"></i>
                 <span>Open in Google Maps</span>
@@ -383,6 +420,29 @@
                     <span id="playBtnText">Play Music</span>
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- DATE MODAL -->
+    <div id="dateModal" class="fixed bottom-0 left-0 right-0 z-50 max-w-md mx-auto hidden modal-enter">
+        <div class="glass-card rounded-t-3xl p-6 border-t border-gold-500/40 relative">
+            <button onclick="closeAllModals()" class="absolute top-5 right-5 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h3 class="font-serif text-xl font-bold text-gold-gradient mb-1">Save the Date</h3>
+            <p class="text-xs text-slate-400 mb-4">Ahmed & Sherouk</p>
+
+            <div class="bg-slate-900/80 border border-gold-500/20 rounded-2xl p-4 space-y-3 mb-5 text-center">
+                <div class="font-bold text-lg text-slate-200">Friday, 6 November 2026</div>
+                <div class="text-sm text-gold-400">3:00–6:00 PM</div>
+                <div class="text-xs text-slate-400 border-t border-gold-500/10 pt-3 mt-2">Katb ElKetab: 3:30 PM</div>
+            </div>
+
+            <button onclick="saveToCalendar()"
+                class="w-full py-3 rounded-xl bg-gradient-to-r from-gold-600 to-gold-400 text-slate-950 font-bold text-sm tracking-wider uppercase hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                <i class="fa-regular fa-calendar-plus"></i>
+                <span>Add to Calendar</span>
+            </button>
         </div>
     </div>
 

@@ -85,18 +85,22 @@ if (envelopeContainer) {
         
         envelopeContainer.classList.add('is-open');
         
-        // Wait for envelope flap and card animation
+        // Sequence (Total 2.0s):
+        // t=0s    → is-open added: flap opens (0.6s)
+        // t=0.0-0.6s → card starts sliding up out of pocket
+        // t=0.6-1.4s → card zooms to center, envelope body parts fade out
+        // t=1.4s  → card starts fading out (until 2.0s)
+        // t=1.4s  → main page begins 0.6s fade-in, audio starts
+        // t=2.0s  → opening screen overlay dismissed (fade out)
         setTimeout(() => {
             invitationContent.classList.remove('is-locked');
             invitationContent.setAttribute('aria-hidden', 'false');
-            
             startAudio();
-            
             setTimeout(() => {
                 openingScreen.classList.add('is-dismissed');
-                setTimeout(() => openingScreen.remove(), 650);
-            }, 600);
-        }, 800);
+                setTimeout(() => openingScreen.remove(), 600); // Wait for dismiss fade
+            }, 600); // 1.4s + 0.6s = 2.0s
+        }, 1400);
     });
 
     // Keyboard support for envelope
@@ -113,15 +117,17 @@ function openModal(id) {
     closeAllModals();
     document.getElementById('modalBackdrop').classList.remove('hidden');
     document.getElementById(id).classList.remove('hidden');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
 }
 
 function closeAllModals() {
     document.getElementById('modalBackdrop').classList.add('hidden');
-    const modals = ['rsvpModal', 'locationModal', 'musicModal', 'contactModal'];
+    const modals = ['rsvpModal', 'locationModal', 'musicModal', 'contactModal', 'dateModal'];
     modals.forEach(m => {
         const el = document.getElementById(m);
         if (el) el.classList.add('hidden');
     });
+    document.body.style.overflow = ''; // Restore background scrolling
 }
 
 /* Audio Player Toggle */
@@ -231,37 +237,44 @@ async function handleRSVPSubmit(e) {
 
 /* Save to Calendar (.ics format) */
 function saveToCalendar() {
-    const title = "Wedding of Ahmed & Sherouk";
-    const location = "White Plaza, Ramag Hotel, El-Mushir Tantawy Axis, 5th Settlement, New Cairo";
-    const details = "Wedding celebration: 3:00–6:00 PM. Katb ElKetab: 3:30 PM. Capacity is limited to 200 guests; RSVP does not reserve a seat. Google Maps: https://share.google/FNLdm4Xul2ibjzvrU";
+    const title = encodeURIComponent("Wedding of Ahmed & Sherouk");
+    const location = encodeURIComponent("White Plaza, Ramag Hotel, El-Mushir Tantawy Axis, 5th Settlement, New Cairo");
+    const details = encodeURIComponent("Wedding celebration: 3:00–6:00 PM. Katb ElKetab: 3:30 PM. Capacity is limited to 200 guests; RSVP does not reserve a seat.\nGoogle Maps: https://share.google/FNLdm4Xul2ibjzvrU");
+    
+    // التوقيت بتوقيت UTC (الساعة 13:00 إلى 16:00 UTC تُعادل 3:00 إلى 6:00 مساءً بتوقيت القاهرة GMT+3)
     const startDate = "20261106T130000Z";
     const endDate = "20261106T160000Z";
-    const escapeIcsText = value => value.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
-    const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
 
-    const icsData = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Ahmed and Sherouk//Wedding Invitation//EN
-CALSCALE:GREGORIAN
-BEGIN:VEVENT
-UID:ahmed-sherouk-wedding-20261106@wedding-invitation
-DTSTAMP:${timestamp}
-SUMMARY:${escapeIcsText(title)}
-LOCATION:${escapeIcsText(location)}
-DESCRIPTION:${escapeIcsText(details)}
-DTSTART:${startDate}
-DTEND:${endDate}
-END:VEVENT
-END:VCALENDAR`;
+    // فحص ما إذا كان المستخدم يفتح الموقع من جهاز آيفون / آيباد / ماك
+    const isAppleDevice = /Mac|iPhone|iPod|iPad/i.test(navigator.userAgent);
 
-    const blob = new Blob([icsData], { type: 'text/calendar;charset=utf-8' });
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.setAttribute('download', 'ahmed_sherouk_wedding.ics');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(link.href);
+    if (isAppleDevice) {
+        // إنشاء بيانات ICS وتمريرها عبر data URI لفتح تطبيق Apple Calendar مباشرة
+        const rawTitle = "Wedding of Ahmed & Sherouk";
+        const rawLocation = "White Plaza, Ramag Hotel, El-Mushir Tantawy Axis, 5th Settlement, New Cairo";
+        const rawDetails = "Wedding celebration: 3:00–6:00 PM. Katb ElKetab: 3:30 PM. Capacity is limited to 200 guests; RSVP does not reserve a seat. Google Maps: https://share.google/FNLdm4Xul2ibjzvrU";
+        
+        const icsData = [
+            "BEGIN:VCALENDAR",
+            "VERSION:2.0",
+            "PRODID:-//Ahmed and Sherouk//Wedding Invitation//EN",
+            "BEGIN:VEVENT",
+            `SUMMARY:${rawTitle}`,
+            `LOCATION:${rawLocation}`,
+            `DESCRIPTION:${rawDetails}`,
+            `DTSTART:${startDate}`,
+            `DTEND:${endDate}`,
+            "END:VEVENT",
+            "END:VCALENDAR"
+        ].join("\n");
+
+        // فتح التقويم مباشرة على أجهزة أبل
+        window.location.href = "data:text/calendar;charset=utf8," + encodeURIComponent(icsData);
+    } else {
+        // فتح صفحة إضافة الحدث مباشرة في Google Calendar لأجهزة أندرويد والكمبيوتر
+        const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
+        window.open(googleUrl, '_blank');
+    }
 }
 
 /* Fetch Latest Guest Messages */

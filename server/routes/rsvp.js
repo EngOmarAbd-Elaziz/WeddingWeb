@@ -44,8 +44,13 @@ router.post('/rsvp', async (req, res) => {
             if (inMemoryMessages.length > 4) inMemoryMessages.pop();
         }
 
-        // Send email
+        // Send admin notification email
         await emailService.sendRSVPEmail(guestData);
+
+        // Send confirmation/invitation email to the guest if attending
+        if (guestData.attendance === 'Attending') {
+            await emailService.sendConfirmationEmail(guestData);
+        }
 
         res.status(200).json({ success: true });
     } catch (error) {
