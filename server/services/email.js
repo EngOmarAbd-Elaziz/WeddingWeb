@@ -247,7 +247,7 @@ async function sendConfirmationEmail(guest) {
                     </div>
 
                     <!-- Map -->
-                    <a href="https://maps.app.goo.gl/piyiy1FwmCqEMKNx9" class="map-btn" target="_blank"
+                    <a href="https://maps.app.goo.gl/E1cmhWBq5Zc2NRgr8" class="map-btn" target="_blank"
                         rel="noopener noreferrer">
                         📍 Open in Google Maps
                     </a>
