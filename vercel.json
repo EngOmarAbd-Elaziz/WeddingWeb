@@ -6,7 +6,7 @@
       "use": "@vercel/node"
     },
     {
-      "src": "*.html",
+      "src": "*.*",
       "use": "@vercel/static"
     },
     {
@@ -15,10 +15,6 @@
     },
     {
       "src": "js/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "assets/**",
       "use": "@vercel/static"
     }
   ],
