@@ -202,53 +202,107 @@ function generateInvitationHtml(guest, baseUrl = '') {
             .footer p { font-size: 10px; color: #334155; letter-spacing: 2px; text-transform: uppercase; line-height: 2; }
             .footer-ornament { color: #b8860b; font-size: 16px; letter-spacing: 6px; margin-bottom: 10px; }
             
-            /* =============================================
+            /* =======================================================
                PRINT / PDF  -  Professional A4 Invitation Pass
-               ============================================= */
+               A4 at 96dpi = 794px x 1123px
+               All rules on .print-mode directly so html2canvas picks them up
+               (html2canvas does NOT read @media print)
+               ======================================================= */
 
-            /* Screen preview when opened via /api/invitation */
+            /* --- Unified A4 canvas layout (applies to both PDF render and screen preview) --- */
             .print-mode {
-                width: 100vw !important;
-                max-width: 100vw !important;
-                min-height: 100vh !important;
+                box-sizing: border-box !important;
+                width: 794px !important;
+                max-width: 794px !important;
+                height: 1123px !important;
+                min-height: 1123px !important;
+                max-height: 1123px !important;
                 margin: 0 !important;
+                overflow: hidden !important;
                 display: flex !important;
                 flex-direction: column !important;
                 justify-content: space-between !important;
                 background-color: #080b12 !important;
+                background: linear-gradient(180deg, #0a0e1a 0%, #080b12 100%) !important;
             }
-            .print-mode .header { padding: 48px 60px 28px !important; }
-            .print-mode .header-ornament { font-size: 30px !important; letter-spacing: 12px !important; margin-bottom: 20px !important; }
-            .print-mode .header h1 { font-size: 52px !important; letter-spacing: 6px !important; margin-bottom: 10px !important; }
-            .print-mode .header-subtitle { font-size: 14px !important; letter-spacing: 6px !important; margin-top: 18px !important; }
+            .print-mode .header {
+                box-sizing: border-box !important;
+                padding: 40px 60px 25px !important;
+                flex-shrink: 0 !important;
+            }
+            .print-mode .header-ornament { font-size: 26px !important; letter-spacing: 12px !important; margin-bottom: 16px !important; }
+            .print-mode .header h1 { font-size: 46px !important; letter-spacing: 6px !important; margin-bottom: 8px !important; }
+            .print-mode .header-subtitle { font-size: 13px !important; letter-spacing: 6px !important; margin-top: 14px !important; }
+
             .print-mode .content {
-                padding: 28px 60px !important;
+                box-sizing: border-box !important;
+                padding: 20px 60px !important;
                 flex-grow: 1 !important;
                 display: flex !important;
                 flex-direction: column !important;
                 justify-content: space-between !important;
+                overflow: hidden !important;
             }
-            .print-mode .greeting { font-size: 15px !important; letter-spacing: 3px !important; margin-bottom: 8px !important; }
-            .print-mode .guest-name { font-size: 40px !important; letter-spacing: 3px !important; margin-bottom: 0 !important; }
-            .print-mode .invite-box { margin: 0 !important; padding: 32px 40px !important; }
-            .print-mode .invite-intro { font-size: 13px !important; letter-spacing: 4px !important; margin-bottom: 16px !important; }
-            .print-mode .couple-names { font-size: 46px !important; margin: 12px 0 !important; }
-            .print-mode .invite-request { font-size: 13px !important; letter-spacing: 2px !important; margin: 14px 0 !important; }
-            .print-mode .details-grid { margin: 0 !important; display: flex !important; justify-content: space-around !important; text-align: center !important; }
-            .print-mode .detail-item { padding: 0 20px !important; border-bottom: none !important; flex: 1 !important; border-right: 1px solid rgba(212,175,55,0.15) !important; }
-            .print-mode .detail-item:last-child { border-right: none !important; }
-            .print-mode .detail-label { font-size: 11px !important; letter-spacing: 3px !important; margin-bottom: 10px !important; }
-            .print-mode .detail-value { font-size: 17px !important; }
-            .print-mode .detail-sub { font-size: 12px !important; margin-top: 6px !important; }
-            .print-mode .companions-box { margin: 0 !important; padding: 18px 30px !important; font-size: 15px !important; }
-            .print-mode .map-btn { display: none !important; }
-            .print-mode .action-buttons { display: none !important; }
-            .print-mode .note { margin: 0 !important; font-size: 12px !important; line-height: 1.9 !important; }
-            .print-mode .footer { padding: 28px 60px !important; }
-            .print-mode .footer p { font-size: 12px !important; letter-spacing: 3px !important; line-height: 2.2 !important; }
-            .print-mode .footer-ornament { font-size: 22px !important; letter-spacing: 8px !important; margin-bottom: 14px !important; }
+            .print-mode .greeting { font-size: 14px !important; letter-spacing: 3px !important; margin-bottom: 6px !important; }
+            .print-mode .guest-name { font-size: 38px !important; letter-spacing: 3px !important; margin-bottom: 0 !important; }
 
-            /* --- @media print: pixel-perfect A4 output --- */
+            .print-mode .invite-box {
+                box-sizing: border-box !important;
+                margin: 0 !important;
+                padding: 28px 40px !important;
+                flex-shrink: 0 !important;
+            }
+            .print-mode .invite-intro { font-size: 12px !important; letter-spacing: 4px !important; margin-bottom: 12px !important; }
+            .print-mode .couple-names { font-size: 42px !important; margin: 10px 0 !important; }
+            .print-mode .invite-request { font-size: 12px !important; letter-spacing: 2px !important; margin: 12px 0 !important; }
+
+            /* Divider inside invite-box */
+            .print-mode .divider { margin: 16px 40px !important; }
+
+            /* Details: horizontal row */
+            .print-mode .details-grid {
+                margin: 0 !important;
+                display: flex !important;
+                justify-content: space-around !important;
+                text-align: center !important;
+                flex-shrink: 0 !important;
+            }
+            .print-mode .detail-item {
+                padding: 14px 12px !important;
+                border-bottom: none !important;
+                flex: 1 !important;
+                border-right: 1px solid rgba(212,175,55,0.15) !important;
+            }
+            .print-mode .detail-item:last-child { border-right: none !important; }
+            .print-mode .detail-label { font-size: 10px !important; letter-spacing: 3px !important; margin-bottom: 8px !important; }
+            .print-mode .detail-value { font-size: 16px !important; }
+            .print-mode .detail-sub { font-size: 11px !important; margin-top: 5px !important; }
+
+            .print-mode .companions-box {
+                box-sizing: border-box !important;
+                margin: 0 !important;
+                padding: 16px 28px !important;
+                font-size: 14px !important;
+                flex-shrink: 0 !important;
+            }
+            .print-mode .map-btn    { display: none !important; }
+            .print-mode .action-buttons { display: none !important; }
+            .print-mode .note {
+                margin: 0 !important;
+                font-size: 11px !important;
+                line-height: 1.8 !important;
+                flex-shrink: 0 !important;
+            }
+
+            .print-mode .footer {
+                box-sizing: border-box !important;
+                padding: 22px 60px !important;
+                flex-shrink: 0 !important;
+            }
+            .print-mode .footer p { font-size: 11px !important; letter-spacing: 3px !important; line-height: 2 !important; }
+            .print-mode .footer-ornament { font-size: 20px !important; letter-spacing: 8px !important; margin-bottom: 12px !important; }
+
+            /* --- @media print: browser native printing (mirrors .print-mode exactly) --- */
             @media print {
                 @page { size: A4 portrait; margin: 0; }
                 html, body {
@@ -256,12 +310,14 @@ function generateInvitationHtml(guest, baseUrl = '') {
                     print-color-adjust: exact !important;
                     background-color: #080b12 !important;
                     margin: 0 !important; padding: 0 !important;
-                    width: 210mm !important; height: 297mm !important;
+                    width: 794px !important;
                     overflow: hidden !important;
                 }
                 .wrapper {
-                    width: 210mm !important; height: 297mm !important;
-                    max-width: 210mm !important;
+                    box-sizing: border-box !important;
+                    width: 794px !important;
+                    height: 1123px !important;
+                    max-width: 794px !important;
                     background-color: #080b12 !important;
                     margin: 0 !important;
                     display: flex !important;
@@ -269,41 +325,13 @@ function generateInvitationHtml(guest, baseUrl = '') {
                     justify-content: space-between !important;
                     overflow: hidden !important;
                 }
-                .header, .content, .footer, .invite-box, .details-grid, .companions-box, .note {
+                .header, .content, .footer, .invite-box,
+                .details-grid, .companions-box, .note {
                     break-inside: avoid !important;
                     page-break-inside: avoid !important;
                 }
-                .header { padding: 12mm 16mm 8mm !important; }
-                .header-ornament { font-size: 22px !important; letter-spacing: 10px !important; margin-bottom: 5mm !important; }
-                .header h1 { font-size: 36px !important; letter-spacing: 5px !important; margin-bottom: 2mm !important; }
-                .header-subtitle { font-size: 11px !important; letter-spacing: 5px !important; margin-top: 4mm !important; }
-                .content {
-                    padding: 6mm 16mm !important;
-                    flex-grow: 1 !important;
-                    display: flex !important;
-                    flex-direction: column !important;
-                    justify-content: space-between !important;
-                }
-                .greeting { font-size: 13px !important; letter-spacing: 3px !important; margin-bottom: 2mm !important; }
-                .guest-name { font-size: 34px !important; letter-spacing: 3px !important; margin-bottom: 0 !important; }
-                .invite-box { margin: 0 !important; padding: 8mm 10mm !important; }
-                .invite-intro { font-size: 11px !important; letter-spacing: 4px !important; margin-bottom: 4mm !important; }
-                .couple-names { font-size: 38px !important; margin: 3mm 0 !important; }
-                .invite-request { font-size: 11px !important; letter-spacing: 2px !important; margin: 4mm 0 !important; }
-                .divider { margin: 5mm 10mm !important; }
-                .details-grid { margin: 0 !important; display: flex !important; justify-content: space-around !important; text-align: center !important; }
-                .detail-item { padding: 0 5mm !important; border-bottom: none !important; flex: 1 !important; border-right: 1px solid rgba(212,175,55,0.15) !important; }
-                .detail-item:last-child { border-right: none !important; }
-                .detail-label { font-size: 9px !important; letter-spacing: 3px !important; margin-bottom: 3mm !important; }
-                .detail-value { font-size: 15px !important; }
-                .detail-sub { font-size: 10px !important; margin-top: 2mm !important; }
-                .companions-box { margin: 0 !important; padding: 5mm 8mm !important; font-size: 13px !important; }
-                .note { margin: 0 !important; font-size: 10px !important; line-height: 1.9 !important; }
-                .map-btn { display: none !important; }
                 .action-buttons { display: none !important; }
-                .footer { padding: 7mm 16mm !important; }
-                .footer p { font-size: 10px !important; letter-spacing: 3px !important; line-height: 2.2 !important; }
-                .footer-ornament { font-size: 18px !important; letter-spacing: 8px !important; margin-bottom: 3mm !important; }
+                .map-btn        { display: none !important; }
             }
         </style>
     </head>

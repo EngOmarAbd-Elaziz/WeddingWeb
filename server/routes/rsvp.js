@@ -102,18 +102,23 @@ router.get('/invitation', (req, res) => {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                var element = document.body;
+                var element = document.querySelector('.wrapper') || document.body;
                 var opt = {
                   margin:       0,
                   filename:     'Wedding Invitation-${name.replace(/'/g, "\\'")}.pdf',
                   image:        { type: 'jpeg', quality: 0.98 },
-                  html2canvas:  { scale: 2 },
-                  jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                  html2canvas:  {
+                    scale: 2,
+                    useCORS: true,
+                    windowWidth: 794,
+                    windowHeight: 1123,
+                    width: 794,
+                    height: 1123,
+                    backgroundColor: '#080b12'
+                  },
+                  jsPDF: { unit: 'px', format: [794, 1123], orientation: 'portrait', hotfixes: ['px_scaling'] }
                 };
-                html2pdf().set(opt).from(element).save().then(function() {
-                    // Optional: close the window after downloading if opened in new tab
-                    // setTimeout(() => window.close(), 1000);
-                });
+                html2pdf().set(opt).from(element).save();
             });
         </script>
         `;
