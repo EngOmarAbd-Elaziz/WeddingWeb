@@ -110,6 +110,10 @@ router.get('/invitation', (req, res) => {
                   html2canvas:  {
                     scale: 2,
                     useCORS: true,
+                    x: 0,
+                    y: 0,
+                    scrollX: 0,
+                    scrollY: 0,
                     windowWidth: 794,
                     windowHeight: 1123,
                     width: 794,

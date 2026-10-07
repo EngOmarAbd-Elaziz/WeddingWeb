@@ -210,7 +210,19 @@ function generateInvitationHtml(guest, baseUrl = '') {
                ======================================================= */
 
             /* --- Unified A4 canvas layout (applies to both PDF render and screen preview) --- */
+            body.print-mode-body {
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: hidden !important;
+                width: 794px !important;
+                height: 1123px !important;
+                background: #080b12 !important;
+                position: relative !important;
+            }
             .print-mode {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
                 box-sizing: border-box !important;
                 width: 794px !important;
                 max-width: 794px !important;
@@ -218,7 +230,9 @@ function generateInvitationHtml(guest, baseUrl = '') {
                 min-height: 1123px !important;
                 max-height: 1123px !important;
                 margin: 0 !important;
+                padding-left: 0 !important;
                 overflow: hidden !important;
+                transform: none !important;
                 display: flex !important;
                 flex-direction: column !important;
                 justify-content: space-between !important;
@@ -335,7 +349,7 @@ function generateInvitationHtml(guest, baseUrl = '') {
             }
         </style>
     </head>
-    <body>
+    <body ${!baseUrl ? 'class="print-mode-body"' : ''}>
         <div class="wrapper ${!baseUrl ? 'print-mode' : ''}">
 
             <!-- Header -->
