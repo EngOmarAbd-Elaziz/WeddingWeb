@@ -132,19 +132,24 @@ async function sendRSVPEmail(guest) {
     }
 }
 
-async function sendConfirmationEmail(guest) {
-    if (!transporter) {
-        console.log('Would have sent confirmation email to:', guest.email);
-        return;
-    }
-
+function generateInvitationHtml(guest, baseUrl = '') {
     const safeName = escapeHtml(guest.name);
     const companions = parseInt(guest.companions) || 0;
     const companionsText = companions === 0
         ? 'You are attending alone.'
         : `You will be joined by <strong>${companions}</strong> companion${companions > 1 ? 's' : ''}`;
 
-    const htmlContent = `
+    let actionButtons = '';
+    if (baseUrl) {
+        actionButtons = `
+            <div class="action-buttons" style="margin-top: 35px; text-align: center; border-top: 1px solid rgba(212,175,55,0.15); padding-top: 25px;">
+                <a href="${baseUrl}/api/invitation?name=${encodeURIComponent(guest.name)}&companions=${companions}&action=print" style="display: inline-block; margin: 5px 10px; padding: 12px 20px; background: #d4af37; color: #080b12; text-decoration: none; font-size: 11px; font-family: 'Helvetica Neue', Helvetica, sans-serif; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; font-weight: bold;">🖨 Print Invitation</a>
+                <a href="${baseUrl}/api/invitation?name=${encodeURIComponent(guest.name)}&companions=${companions}&action=download" style="display: inline-block; margin: 5px 10px; padding: 12px 20px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-decoration: none; font-size: 11px; font-family: 'Helvetica Neue', Helvetica, sans-serif; letter-spacing: 2px; text-transform: uppercase; border-radius: 4px; font-weight: bold;">📄 Download as PDF</a>
+            </div>
+        `;
+    }
+
+    return `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -196,10 +201,101 @@ async function sendConfirmationEmail(guest) {
             .footer { padding: 25px 30px; text-align: center; border-top: 1px solid rgba(212,175,55,0.15); }
             .footer p { font-size: 10px; color: #334155; letter-spacing: 2px; text-transform: uppercase; line-height: 2; }
             .footer-ornament { color: #b8860b; font-size: 16px; letter-spacing: 6px; margin-bottom: 10px; }
+            
+            /* Perfect A4 layout for PDF / Print */
+            .print-mode { 
+                width: 794px !important;
+                max-width: 794px !important;
+                min-height: 1123px !important; /* A4 aspect ratio */
+                margin: 0 auto !important;
+                display: flex !important; 
+                flex-direction: column !important; 
+                justify-content: space-between !important; 
+                background-color: #080b12 !important;
+            }
+            .print-mode .header { padding: 40px 30px 20px !important; }
+            .print-mode .header-ornament { margin-bottom: 15px !important; font-size: 26px !important; }
+            .print-mode .header h1 { font-size: 44px !important; margin-bottom: 8px !important; }
+            .print-mode .header-subtitle { font-size: 13px !important; margin-top: 15px !important; }
+            
+            .print-mode .content { 
+                padding: 30px 40px !important; 
+                flex-grow: 1 !important; 
+                display: flex !important; 
+                flex-direction: column !important; 
+                justify-content: space-evenly !important; 
+            }
+            .print-mode .greeting { font-size: 16px !important; margin-bottom: 10px !important; }
+            .print-mode .guest-name { font-size: 34px !important; margin-bottom: 20px !important; }
+            
+            .print-mode .invite-box { margin: 20px 0 !important; padding: 40px 30px !important; flex-grow: 0 !important; }
+            .print-mode .invite-intro { font-size: 14px !important; margin-bottom: 15px !important; }
+            .print-mode .couple-names { font-size: 40px !important; margin: 15px 0 !important; }
+            .print-mode .invite-request { font-size: 13px !important; margin: 15px 0 !important; }
+            
+            .print-mode .details-grid { margin: 25px 0 !important; }
+            .print-mode .detail-item { padding: 15px 0 !important; }
+            .print-mode .detail-label { font-size: 12px !important; margin-bottom: 8px !important; }
+            .print-mode .detail-value { font-size: 18px !important; }
+            .print-mode .detail-sub { font-size: 13px !important; margin-top: 6px !important; }
+            
+            .print-mode .companions-box { margin: 25px 0 !important; padding: 18px 25px !important; font-size: 15px !important; }
+            .print-mode .map-btn { display: none !important; } /* Hidden entirely */
+            .print-mode .action-buttons { display: none !important; } /* Hidden in PDF view */
+            .print-mode .note { margin-top: 30px !important; font-size: 13px !important; line-height: 1.8 !important; }
+            
+            .print-mode .footer { padding: 30px 40px !important; }
+            .print-mode .footer p { font-size: 12px !important; margin-top: 5px !important; }
+            .print-mode .footer-ornament { font-size: 20px !important; margin-bottom: 15px !important; }
+            
+            @media print {
+                html, body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #080b12 !important; margin: 0; padding: 0; width: 100%; height: 100%; }
+                @page { size: A4 portrait; margin: 0; }
+                
+                .wrapper { 
+                    width: 794px !important;
+                    max-width: 100% !important;
+                    min-height: 1123px !important;
+                    background-color: #080b12 !important; 
+                    margin: 0 auto; 
+                    display: flex !important; 
+                    flex-direction: column !important; 
+                    justify-content: space-between !important;
+                }
+                
+                .header { padding: 40px 30px 20px !important; }
+                .header-ornament { margin-bottom: 15px !important; font-size: 26px !important; }
+                .header h1 { font-size: 44px !important; margin-bottom: 8px !important; }
+                .header-subtitle { font-size: 13px !important; margin-top: 15px !important; }
+                
+                .content { padding: 30px 40px !important; flex-grow: 1 !important; display: flex !important; flex-direction: column !important; justify-content: space-evenly !important; }
+                .greeting { font-size: 16px !important; margin-bottom: 10px !important; }
+                .guest-name { font-size: 34px !important; margin-bottom: 20px !important; }
+                
+                .invite-box { margin: 20px 0 !important; padding: 40px 30px !important; }
+                .invite-intro { font-size: 14px !important; margin-bottom: 15px !important; }
+                .couple-names { font-size: 40px !important; margin: 15px 0 !important; }
+                .invite-request { font-size: 13px !important; margin: 15px 0 !important; }
+                
+                .details-grid { margin: 25px 0 !important; }
+                .detail-item { padding: 15px 0 !important; }
+                .detail-label { font-size: 12px !important; margin-bottom: 8px !important; }
+                .detail-value { font-size: 18px !important; }
+                .detail-sub { font-size: 13px !important; margin-top: 6px !important; }
+                
+                .companions-box { margin: 25px 0 !important; padding: 18px 25px !important; font-size: 15px !important; }
+                .map-btn { display: none !important; }
+                .action-buttons { display: none !important; }
+                .note { margin-top: 30px !important; font-size: 13px !important; line-height: 1.8 !important; }
+                
+                .footer { padding: 30px 40px !important; }
+                .footer p { font-size: 12px !important; margin-top: 5px !important; }
+                .footer-ornament { font-size: 20px !important; margin-bottom: 15px !important; }
+            }
         </style>
     </head>
     <body>
-        <div class="wrapper">
+        <div class="wrapper ${!baseUrl ? 'print-mode' : ''}">
 
             <!-- Header -->
             <div class="header">
@@ -259,6 +355,7 @@ async function sendConfirmationEmail(guest) {
                     We look forward to celebrating this special day with you.
                 </p>
 
+                ${actionButtons}
             </div>
 
             <!-- Footer -->
@@ -272,6 +369,16 @@ async function sendConfirmationEmail(guest) {
     </body>
     </html>
     `;
+}
+
+async function sendConfirmationEmail(guest, baseUrl = '') {
+    if (!transporter) {
+        console.log('Would have sent confirmation email to:', guest.email);
+        return;
+    }
+
+    const companions = parseInt(guest.companions) || 0;
+    const htmlContent = generateInvitationHtml(guest, baseUrl);
 
     const mailOptions = {
         from: emailUser,
@@ -292,5 +399,6 @@ async function sendConfirmationEmail(guest) {
 
 module.exports = {
     sendRSVPEmail,
-    sendConfirmationEmail
+    sendConfirmationEmail,
+    generateInvitationHtml
 };
